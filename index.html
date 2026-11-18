@@ -54,8 +54,8 @@ h1{font-size:clamp(40px,6.5vw,72px);line-height:1;letter-spacing:-.04em;margin:1
 .btn.p{background:var(--grad);border:0;color:#fff}
 
 /* stats */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:8px}
-@media (max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+@media (max-width:760px){.stats{grid-template-columns:1fr}}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
 .stat b{display:block;font-size:30px;letter-spacing:-.03em;line-height:1.1}
 .stat span{color:var(--muted);font-size:13.5px}
@@ -232,7 +232,6 @@ footer{padding:20px 0 40px;color:var(--dim);font-size:13px;text-align:center}
   <div class="stats rv">
     <div class="stat"><b class="grad">1.274</b><span>contribuições no GitHub no último ano</span></div>
     <div class="stat"><b class="grad">21</b><span>repositórios públicos no GitHub</span></div>
-    <div class="stat"><b class="grad">+998</b><span>linhas em PR mesclada no open source</span></div>
     <div class="stat"><b class="grad">C1</b><span>inglês certificado (EF SET)</span></div>
   </div>
 
@@ -382,7 +381,7 @@ footer{padding:20px 0 40px;color:var(--dim);font-size:13px;text-align:center}
           <ul>
             <li>Pastas, cores, drag-and-drop e multisseleção</li>
             <li>Deleção em cascata com confirmação</li>
-            <li>PR #2: +998 / −204, aceita no upstream</li>
+            <li>PR #2 revisada e aceita no projeto original</li>
           </ul>
           <div class="icons"><img src="assets/i/react.svg" alt="React" title="React"><img src="assets/i/typescript.svg" alt="TypeScript" title="TypeScript"><img src="assets/i/rust.svg" alt="Rust (Tauri)" title="Rust (Tauri)"></div>
           <div class="links"><a href="https://github.com/londarks/colmeia/pull/2" target="_blank" rel="noopener">PR #2 ↗</a></div>
