@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kaio Posansky · Engenharia de software para agentes de IA</title>
+<meta name="description" content="Kaio Angelo Posansky Santos — Ciência da Computação na UFPR, estágio em análise de dados na TopOne. Construo as ferramentas entre o agente de IA e o trabalho real: tool calling, CLIs para agentes, automações e full stack.">
+<meta property="og:title" content="Kaio Posansky · Engenharia de software para agentes de IA">
+<meta property="og:description" content="Fork do Oh My Pi, Moodly, i9UFPR, DACC Platform, Colmeia. Cases com evidência: commits, PRs e releases.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0f0f0e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23ea1d2c'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' fill='white' text-anchor='middle'%3Ek%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#0f0f0e; --bg2:#171715; --card:#1c1c1a; --line:#2c2c29; --fg:#ecebe6; --muted:#a3a29b; --dim:#8a8982;
+  --red:#d81b2a; --red2:#ff6b74; --green:#5fd38d; --amber:#f2b84b; --blue:#7aa7ff;
+  --mono: ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  --sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --r:14px;
+}
+[data-theme="light"]{
+  --bg:#faf9f5; --bg2:#f1efe8; --card:#ffffff; --line:#e2dfd5; --fg:#1a1a18; --muted:#55544e; --dim:#6b6a63;
+  --green:#1d8a4c; --amber:#a86a00; --blue:#2858c8; --red2:#c8101e;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration-color:var(--red);text-underline-offset:3px}
+a:hover{color:var(--red2)}
+:focus-visible{outline:2px solid var(--red2);outline-offset:3px;border-radius:4px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--red);color:#fff;padding:8px 12px;border-radius:8px;z-index:99}
+.skip:focus{left:8px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+code,.mono{font-family:var(--mono);font-size:.88em}
+
+/* nav */
+header.nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:20px;height:60px}
+.logo{font-family:var(--mono);font-weight:700;text-decoration:none;display:flex;align-items:center;gap:8px}
+.logo b{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;background:var(--red);color:#fff;font-size:14px}
+.nav nav{display:flex;gap:18px;margin-left:auto;font-size:14px}
+.nav nav a{text-decoration:none;color:var(--muted)}
+.nav nav a:hover{color:var(--fg)}
+.theme{background:none;border:1px solid var(--line);color:var(--fg);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:15px}
+@media (max-width:760px){.nav nav{display:none}.theme{margin-left:auto}}
+
+/* hero */
+.hero{padding:88px 0 56px;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+@media (max-width:900px){.hero{grid-template-columns:1fr;padding-top:56px}}
+.eyebrow{font-family:var(--mono);font-size:13px;color:var(--red2);letter-spacing:.04em;text-transform:uppercase}
+h1{font-size:clamp(34px,5.4vw,60px);line-height:1.04;letter-spacing:-.03em;margin:14px 0 20px;font-weight:750}
+h1 em{font-style:normal;color:var(--red2)}
+.lede{font-size:18px;color:var(--muted);max-width:56ch}
+.lede strong{color:var(--fg);font-weight:600}
+.ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;border:1px solid var(--line);text-decoration:none;font-weight:600;font-size:15px;background:var(--card)}
+.btn.primary{background:var(--red);border-color:var(--red);color:#fff}
+.btn.primary:hover{background:#c8101e;color:#fff}
+.btn:hover{border-color:var(--red2)}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:26px;font-size:14px;color:var(--dim)}
+.meta span::before{content:"● ";color:var(--green)}
+
+/* terminal */
+.term{background:#0b0b0a;border:1px solid #2a2a27;border-radius:var(--r);overflow:hidden;box-shadow:0 30px 80px -30px rgba(234,29,44,.35);color:#e9e8e2}
+.term .bar{display:flex;gap:6px;align-items:center;padding:10px 14px;border-bottom:1px solid #222;font-family:var(--mono);font-size:12px;color:#8b8a84}
+.term .bar i{width:10px;height:10px;border-radius:50%;background:#333;display:inline-block}
+.term .bar i:first-child{background:#ff5f57}.term .bar i:nth-child(2){background:#febc2e}.term .bar i:nth-child(3){background:#28c840}
+.term .bar span{margin-left:8px}
+.term pre{margin:0;padding:16px 18px;font:13px/1.6 var(--mono);white-space:pre-wrap;word-break:break-word;min-height:300px}
+.c-dim{color:#8f8e87}.c-red{color:#ff6b74}.c-grn{color:#6be09a}.c-amb{color:#f5c25c}.c-blu{color:#8db4ff}
+.caret{display:inline-block;width:8px;height:15px;background:#e9e8e2;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.term-note{font-size:12px;color:var(--dim);margin-top:10px;font-family:var(--mono)}
+
+/* sections */
+section{padding:72px 0;border-top:1px solid var(--line)}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+.sec-head .n{font-family:var(--mono);color:var(--red2);font-size:14px}
+h2{font-size:clamp(26px,3.4vw,38px);letter-spacing:-.02em;margin:0;line-height:1.15}
+.sec-head p{color:var(--muted);margin:0;flex-basis:100%;max-width:70ch}
+
+/* fit matrix */
+.fit{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:900px){.fit{grid-template-columns:1fr}}
+.fit div{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.fit h3{margin:0 0 6px;font-size:16px}
+.fit p{margin:0;color:var(--muted);font-size:14.5px}
+.fit .k{font-family:var(--mono);font-size:12px;color:var(--dim);display:block;margin-bottom:8px}
+
+/* cases */
+.case{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:36px;padding:40px 0;border-bottom:1px dashed var(--line)}
+.case>*{min-width:0}
+.case:last-child{border-bottom:0}
+.case.flip .vis{order:-1}
+@media (max-width:900px){.case{grid-template-columns:minmax(0,1fr)}.case.flip .vis{order:0}}
+.case .tag{font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap}
+.pill{border:1px solid var(--line);border-radius:999px;padding:2px 10px}
+.pill.red{border-color:var(--red);color:var(--red2)}
+.pill.ok{border-color:color-mix(in srgb,var(--green) 50%,transparent);color:var(--green)}
+[data-theme="light"] .pill.ok{color:#17703d}
+.case h3{font-size:26px;margin:12px 0 6px;letter-spacing:-.015em}
+.case .one{color:var(--muted);margin:0 0 18px;font-size:17px}
+dl.prs{margin:0;display:grid;gap:12px}
+dl.prs dt{font-family:var(--mono);font-size:12px;color:var(--red2);text-transform:uppercase;letter-spacing:.05em}
+dl.prs dd{margin:2px 0 0;font-size:15px}
+.ev{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+.ev a{font-family:var(--mono);font-size:12.5px;text-decoration:none;border:1px solid var(--line);background:var(--bg2);padding:5px 10px;border-radius:8px}
+.ev a:hover{border-color:var(--red2)}
+.ev a::before{content:"↗ ";color:var(--red2)}
+.stack{margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--dim)}
+.vis{align-self:start;position:sticky;top:84px}
+@media (max-width:900px){.vis{position:static}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.panel .ph{padding:9px 14px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+.panel pre{margin:0;padding:14px 16px;font:12.5px/1.6 var(--mono);white-space:pre-wrap;word-break:break-word;background:#0b0b0a;color:#e9e8e2}
+.panel svg{display:block;width:100%;height:auto}
+.cap{font-size:12px;color:var(--dim);margin:8px 2px 0;font-family:var(--mono)}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;background:none;border:0;color:var(--muted);padding:9px;font:600 12px var(--mono);cursor:pointer;border-bottom:2px solid transparent}
+.tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--red)}
+.tp[hidden]{display:none}
+
+/* sidebar mock */
+.mock{padding:14px;display:grid;grid-template-columns:150px 1fr;gap:12px;font-size:12.5px}
+.mock .sb{background:var(--bg2);border-radius:10px;padding:10px;display:grid;gap:4px;align-content:start}
+.mock .sb div{padding:5px 8px;border-radius:6px;display:flex;align-items:center;gap:6px}
+.mock .sb .sel{background:color-mix(in srgb,var(--red) 18%,transparent);outline:1px solid color-mix(in srgb,var(--red) 50%,transparent)}
+.mock .dot{width:8px;height:8px;border-radius:50%}
+.mock .canvas{border:1px dashed var(--line);border-radius:10px;padding:12px;display:grid;gap:10px;align-content:center}
+.mock .modal{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px}
+.mock .modal b{display:block;margin-bottom:4px}
+.mock .row{display:flex;gap:6px;margin-top:10px}
+.mock .row span{padding:4px 10px;border-radius:6px;border:1px solid var(--line);font-size:11.5px}
+.mock .row .d{background:var(--red);border-color:var(--red);color:#fff}
+
+/* timeline */
+.tl{display:grid;gap:0}
+.tl article{display:grid;grid-template-columns:180px 1fr;gap:24px;padding:24px 0;border-bottom:1px solid var(--line)}
+@media (max-width:700px){.tl article{grid-template-columns:1fr;gap:6px}}
+.tl .when{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.tl h3{margin:0;font-size:19px}
+.tl .role{color:var(--red2);font-size:14px;margin:2px 0 8px;font-weight:600}
+.tl ul{margin:0;padding-left:18px;color:var(--muted)}
+.tl li{margin:4px 0}
+
+/* grid of more */
+.more{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.more a{display:block;text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;transition:transform .15s,border-color .15s}
+.more a:hover{transform:translateY(-2px);border-color:var(--red2);color:inherit}
+.more b{display:block;font-size:15px}
+.more span{display:block;color:var(--muted);font-size:13.5px;margin-top:4px}
+.more i{display:block;font-style:normal;font-family:var(--mono);font-size:11.5px;color:var(--dim);margin-top:10px}
+
+/* skills */
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.skills div{border:1px solid var(--line);border-radius:var(--r);padding:18px;background:var(--card)}
+.skills h3{margin:0 0 8px;font-size:15px}
+.skills p{margin:0;color:var(--muted);font-size:14px}
+.skills small{display:block;margin-top:8px;font-family:var(--mono);font-size:11.5px;color:var(--dim)}
+
+/* method */
+.method{display:grid;grid-template-columns:repeat(4,1fr);gap:0;counter-reset:s;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+@media (max-width:900px){.method{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.method{grid-template-columns:1fr}}
+.method div{padding:20px;border-right:1px solid var(--line);background:var(--card)}
+.method div:last-child{border-right:0}
+.method div::before{counter-increment:s;content:"0" counter(s);font-family:var(--mono);color:var(--red2);font-size:13px}
+.method h3{margin:6px 0;font-size:16px}
+.method p{margin:0;color:var(--muted);font-size:14px}
+
+.honest{margin-top:22px;padding:16px 18px;border-left:3px solid var(--amber);background:var(--bg2);border-radius:0 10px 10px 0;font-size:14.5px;color:var(--muted)}
+.honest b{color:var(--fg)}
+
+/* contact */
+.contact{text-align:center;padding:96px 0}
+.contact h2{font-size:clamp(30px,4.5vw,52px)}
+.contact p{color:var(--muted);max-width:56ch;margin:14px auto 26px}
+.contact .ctas{justify-content:center}
+footer{border-top:1px solid var(--line);padding:24px 0;color:var(--dim);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+.no-js .reveal{opacity:1;transform:none}
+@media print{header.nav,.theme,.term .caret{display:none}.reveal{opacity:1;transform:none}section{break-inside:avoid}}
+</style>
+<script>
+document.documentElement.classList.add('js');
+try{var t=localStorage.getItem('kp-theme');if(t)document.documentElement.dataset.theme=t;else if(matchMedia('(prefers-color-scheme: light)').matches)document.documentElement.dataset.theme='light'}catch(e){}
+</script>
+</head>
+<body class="no-js">
+<a class="skip" href="#cases">Pular para os cases</a>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="#top"><b aria-hidden="true">k</b>kaio.posansky</a>
+    <nav aria-label="Seções">
+      <a href="#fit">Fit iFood</a>
+      <a href="#cases">Cases</a>
+      <a href="#trajetoria">Trajetória</a>
+      <a href="#metodo">Como trabalho</a>
+      <a href="#mais">Mais projetos</a>
+      <a href="#contato">Contato</a>
+    </nav>
+    <button class="theme" id="theme" aria-label="Alternar tema claro/escuro">◐</button>
+  </div>
+</header>
+
+<main id="top">
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <div class="eyebrow">Portfólio 2026 · AI Engineer</div>
+      <h1>Construo o software que fica <em>entre o agente de IA</em> e o trabalho real.</h1>
+      <p class="lede">Sou o Kaio, estudante de <strong>Ciência da Computação na UFPR</strong> e estagiário de <strong>análise de dados na TopOne</strong>. Mantenho um fork do agente <strong>Oh My Pi</strong>, criei uma CLI para meu agente ler a faculdade sem poder escrever nada e programo em projetos do <strong>i9UFPR</strong>. Cada case abaixo tem o commit, a PR ou a release que comprova o que eu fiz.</p>
+      <div class="ctas">
+        <a class="btn primary" href="#cases">Ver os cases ↓</a>
+        <a class="btn" href="https://github.com/kaioposnky" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn" href="https://www.linkedin.com/in/kaioposansky/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a class="btn" href="mailto:kposansky@gmail.com">kposansky@gmail.com</a>
+      </div>
+      <div class="meta"><span>Curitiba, PR · remoto</span><span>30 h/semana</span><span>Formatura prevista: jul/2028</span></div>
+    </div>
+    <div>
+      <div class="term" role="img" aria-label="Demonstração em terminal: um provedor envia o nome de ferramenta truncado 'ech'; o fork recupera para 'echo' e a chamada executa.">
+        <div class="bar"><i></i><i></i><i></i><span>omp — recuperação de tool call</span></div>
+        <pre id="typer" aria-hidden="true"></pre>
+      </div>
+      <div class="term-note">Exemplo sintético reproduzindo o bug corrigido em <a href="https://github.com/kaioposnky/omp/commit/dda5985f6d4fff182ed69a8ec4ad8a50e5c35866" target="_blank" rel="noopener">dda5985</a>.</div>
+    </div>
+  </div>
+</div>
+
+<section id="fit">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="n">01</span><h2>O que a vaga pede, onde está aqui</h2>
+      <p>A trilha AI Engineer pede quem “constrói e integra soluções de software voltadas para produtos de IA” e “constrói, aprende e evolui com IA”. Este é o mapa direto:</p></div>
+    <div class="fit">
+      <div class="reveal"><span class="k">integração com LLMs</span><h3>Tool calling e provedores</h3><p>Corrigi falhas reais de contrato entre agente e provedores no fork do OMP: nomes de ferramenta truncados e JSON Schema rejeitado pelo Google. <a href="#omp">Case OMP →</a></p></div>
+      <div class="reveal"><span class="k">orquestração de agentes</span><h3>Triagem, risco, modelo e conclusão</h3><p>Integrei o Jev ao agente para classificar risco, pedir aprovação humana em chamadas perigosas, escolher modelo e verificar se a tarefa terminou. <a href="#omp">Case OMP →</a></p></div>
+      <div class="reveal"><span class="k">ferramentas para agentes</span><h3>Contratos, não scraping solto</h3><p>Moodly: CLI somente de leitura, com lista fechada de 25 funções, envelope JSON único e erros que o agente consegue interpretar. <a href="#moodly">Case Moodly →</a></p></div>
+      <div class="reveal"><span class="k">dados + IA no negócio</span><h3>Análise de crédito na TopOne</h3><p>SQL, Python e pandas para entender regras de um motor de decisão de crédito; LLMs via OMP para automatizar e documentar. <a href="#trajetoria">Trajetória →</a></p></div>
+      <div class="reveal"><span class="k">software em equipe</span><h3>Full stack e coordenação</h3><p>Coordenei 5 devs na DACC Platform (.NET + Next.js) e trabalho em React + Laravel no i9UFPR. <a href="#dacc">Case DACC →</a></p></div>
+      <div class="reveal"><span class="k">open source</span><h3>PR integrada ao upstream</h3><p>Sidebar de workspaces do Colmeia, orquestrador de agentes em canvas: +998/−204 linhas, mesclada em jul/2026. <a href="#colmeia">Case Colmeia →</a></p></div>
+    </div>
+  </div>
+</section>
+
+<section id="cases">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="n">02</span><h2>Cases</h2>
+      <p>Cada case tem problema, meu papel, a decisão técnica, o resultado verificável e o que ele <em>não</em> prova. Os exemplos visuais usam dados fictícios.</p></div>
+
+    <!-- OMP -->
+    <article class="case" id="omp">
+      <div class="reveal">
+        <div class="tag"><span class="pill red">Destaque · IA</span><span class="pill">Fork público</span><span class="pill">ago/2026 → hoje</span></div>
+        <h3>Oh My Pi (fork): tool calling que não quebra</h3>
+        <p class="one">Um agente de código em terminal é tão confiável quanto o contrato entre ele e o provedor. Mantenho um fork do <a href="https://github.com/can1357/oh-my-pi" target="_blank" rel="noopener">can1357/oh-my-pi</a> com correções e controle de execução.</p>
+        <dl class="prs">
+          <dt>Problema</dt><dd>Alguns provedores cortavam o último caractere do nome da ferramenta em streaming (<code>echo</code> chegava como <code>ech</code>). Cada chamada falhava com <em>Tool not found</em> e derrubava o loop inteiro. A API do Google também rejeitava anotações de JSON Schema válidas em outros provedores.</dd>
+          <dt>Decisão</dt><dd>Recuperar o nome só quando não há ambiguidade: completar um caractere se só uma ferramenta casa, senão um prefixo único. A chamada recuperada é reescrita com o nome canônico para histórico, persistência e replay continuarem consistentes. Ambíguo continua sendo erro.</dd>
+          <dt>Controle</dt><dd>Integração do Jev: uma triagem por prompt (clareza, risco, plano). Uma política por palavras-chave só pode <em>endurecer</em> o veredito; chamadas mutáveis em área de risco exigem confirmação humana e execuções sem terminal são bloqueadas. Também roteamento de modelo e verificação de conclusão.</dd>
+          <dt>Resultado</dt><dd>Correções em commits públicos com testes e a release <code>v18.22.0</code> (17/11/2026) com 6 binários e verificação de integridade.</dd>
+          <dt>Limites</dt><dd>O agente e quase todo o código são do upstream; meu trabalho é o delta, feito com apoio de agentes e revisado por mim. Não há merge no upstream nem métrica de adoção externa.</dd>
+        </dl>
+        <div class="ev">
+          <a href="https://github.com/kaioposnky/omp" target="_blank" rel="noopener">repositório</a>
+          <a href="https://github.com/kaioposnky/omp/commit/dda5985f6d4fff182ed69a8ec4ad8a50e5c35866" target="_blank" rel="noopener">nomes truncados +216</a>
+          <a href="https://github.com/kaioposnky/omp/commit/9e6b8cce0d93678786921ad44e1d1519be6d0250" target="_blank" rel="noopener">schema Google</a>
+          <a href="https://github.com/kaioposnky/omp/commit/6a0f96775052524801599664b62324ef0a759b76" target="_blank" rel="noopener">triagem/risco +249</a>
+          <a href="https://github.com/kaioposnky/omp/commit/44edd912f6508a12efc5b1bd4c1277b02aa5e596" target="_blank" rel="noopener">roteamento de modelo</a>
+          <a href="https://github.com/kaioposnky/omp/commit/6869eefe8db3ae6f8a4e2634eb3e48df5eb6c9b5" target="_blank" rel="noopener">verificação de conclusão</a>
+          <a href="https://github.com/kaioposnky/omp/releases/tag/v18.22.0" target="_blank" rel="noopener">release v18.22.0</a>
+        </div>
+        <div class="stack">TypeScript · Bun · LLMs · tool calling · JSON Schema · MCP · GitHub Actions</div>
+      </div>
+      <div class="vis reveal">
+        <div class="panel">
+          <div class="tabs" role="tablist" aria-label="Fluxo da chamada de ferramenta">
+            <button role="tab" aria-selected="true" aria-controls="omp-a" id="omp-ta">Resolução</button>
+            <button role="tab" aria-selected="false" aria-controls="omp-b" id="omp-tb" tabindex="-1">Aprovação de risco</button>
+          </div>
+          <div class="tp" id="omp-a" role="tabpanel" aria-labelledby="omp-ta">
+<pre><span class="c-dim">// ferramentas anunciadas: [echo, edit, grep, glob]</span>
+<span class="c-dim">// provedor envia →</span>
+resolve(<span class="c-amb">"ech"</span>)   <span class="c-grn">→ "echo"</span>  <span class="c-dim">único com +1 char</span>
+resolve(<span class="c-amb">"gre"</span>)   <span class="c-grn">→ "grep"</span>  <span class="c-dim">único com +1 char</span>
+resolve(<span class="c-amb">"gl"</span>)    <span class="c-grn">→ "glob"</span>  <span class="c-dim">prefixo único</span>
+resolve(<span class="c-amb">"e"</span>)     <span class="c-red">✗ ToolNotFound</span>
+                 <span class="c-dim">ambíguo: echo | edit</span>
+                 <span class="c-dim">→ nunca adivinhar</span>
+
+<span class="c-dim">// a chamada recuperada é reescrita:</span>
+{ name: <span class="c-grn">"echo"</span>, args: {...} }
+<span class="c-dim">// histórico, persistência e replay</span>
+<span class="c-dim">// veem só o nome canônico</span></pre>
+          </div>
+          <div class="tp" id="omp-b" role="tabpanel" aria-labelledby="omp-tb" hidden>
+<pre><span class="c-blu">prompt</span>  "limpa os arquivos antigos de deploy"
+<span class="c-blu">jev</span>     clareza: ok · risco: <span class="c-amb">alto</span> · plano: sim
+<span class="c-blu">policy</span>  palavra-chave "deploy" → <span class="c-amb">require_approval</span>
+        <span class="c-dim">(a política só endurece o veredito)</span>
+
+<span class="c-blu">tool</span>    bash rm -rf ./deploy/old
+        <span class="c-amb">⚠ confirmação necessária</span> [s/N]
+<span class="c-blu">headless</span> <span class="c-red">bloqueado</span> <span class="c-dim">sem humano para aprovar</span>
+
+<span class="c-dim">PI_JEV_TRIAGE=0 desliga as duas camadas</span></pre>
+          </div>
+        </div>
+        <p class="cap">Exemplos sintéticos do comportamento descrito nos commits.</p>
+      </div>
+    </article>
+
+    <!-- Moodly -->
+    <article class="case flip" id="moodly">
+      <div class="reveal">
+        <div class="tag"><span class="pill red">Destaque · ferramenta para agente</span><span class="pill">Python</span><span class="pill">out/2026</span></div>
+        <h3>Moodly: meu agente lê a faculdade, sem poder escrever</h3>
+        <p class="one">CLI que deixa um agente de IA consultar meus cursos em dois Moodles da UFPR, com as permissões da minha própria conta.</p>
+        <dl class="prs">
+          <dt>Problema</dt><dd>Dar contexto acadêmico real para um agente sem dar a ele a chance de enviar atividade, iniciar prova ou marcar conclusão, e sem misturar IDs de sites diferentes.</dd>
+          <dt>Decisão</dt><dd>Somente leitura por construção: lista fechada de 25 funções verificadas contra o que o site anuncia, <strong>nenhum passthrough genérico</strong> e nenhuma chamada de <code>submit</code>, <code>attempt</code> ou <code>view</code> no código. Dois perfis fixos; todo payload carrega o perfil de origem. Saída em envelope JSON único e códigos de saída iguais ao código do erro, para o agente decidir sozinho o próximo passo.</dd>
+          <dt>Resultado</dt><dd>Leituras e exportações testadas em 6 cursos reais (4 + 2). Comparando com a página: mesmos IDs e tipos de módulo em 5 de 6; no sexto, 2 módulos visíveis só pela API foram exportados.</dd>
+          <dt>Limites</dt><dd>Conteúdo de arquivos e texto renderizado não foram comparados; alguns plugins seguem sem suporte, e isso é documentado como lacuna, não contornado com scraping. Repositório privado por conter fluxo de login institucional.</dd>
+        </dl>
+        <div class="stack">Python · Playwright · CLI · JSON · pytest · documentação para agentes (skill)</div>
+      </div>
+      <div class="vis reveal">
+        <div class="panel">
+          <div class="ph"><span>$ moodly courses --json</span><span>exit 0</span></div>
+<pre>{
+  <span class="c-blu">"ok"</span>: <span class="c-grn">true</span>,
+  <span class="c-blu">"profile"</span>: <span class="c-amb">"ufprvirtual"</span>,
+  <span class="c-blu">"data"</span>: [
+    { <span class="c-blu">"id"</span>: 4102, <span class="c-blu">"name"</span>: <span class="c-amb">"Disciplina Exemplo A"</span> },
+    { <span class="c-blu">"id"</span>: 4177, <span class="c-blu">"name"</span>: <span class="c-amb">"Disciplina Exemplo B"</span> }
+  ]
+}</pre>
+          <div class="ph" style="border-top:1px solid var(--line)"><span>$ moodly call mod_assign_save_submission</span><span style="color:var(--red2)">exit 3</span></div>
+<pre>{
+  <span class="c-blu">"ok"</span>: <span class="c-red">false</span>,
+  <span class="c-blu">"error"</span>: {
+    <span class="c-blu">"code"</span>: <span class="c-amb">"not_allowlisted"</span>,
+    <span class="c-blu">"hint"</span>: <span class="c-amb">"moodly is read-only; no generic passthrough"</span>
+  }
+}</pre>
+        </div>
+        <p class="cap">Dados fictícios. Ilustra o contrato: sucesso e recusa no mesmo envelope.</p>
+      </div>
+    </article>
+
+    <!-- i9 -->
+    <article class="case" id="i9">
+      <div class="reveal">
+        <div class="tag"><span class="pill red">i9UFPR</span><span class="pill">em equipe</span><span class="pill">nov/2026 → hoje</span></div>
+        <h3>i9UFPR: painel de agentes e campeonato de robótica</h3>
+        <p class="one">Programo em dois projetos do ecossistema de inovação da UFPR, ambos em equipe.</p>
+        <dl class="prs">
+          <dt>BotOffice</dt><dd>Painel local para ver atividade de agentes Hermes e uso de provedores. Reorganizei o servidor Python em módulos (HTTP, serviços, integrações, estado), separados da interface, com testes e documentação de arquitetura. Decisão central: coletores em segundo plano fora da API e limites claros de leitura do SQLite.</dd>
+          <dt>Campeonato</dt><dd>Painel de juízes em React e API em Laravel para o Pitch Day Experience. Trabalhei em estados de espera e conectividade, sincronização do placar e proteção contra atualizações de pontuação durante o encerramento da partida, além de correções nos testes.</dd>
+          <dt>Limites</dt><dd>BotOffice está em desenvolvimento e é local, não SaaS. Os repositórios são do grupo e privados; por isso aqui vai o diagrama, não o código.</dd>
+        </dl>
+        <div class="stack">Python · SQLite · Hermes/Ollama · React · PHP/Laravel · testes de API</div>
+      </div>
+      <div class="vis reveal">
+        <div class="panel">
+          <div class="ph"><span>partida: encerramento protegido</span><span>diagrama original</span></div>
+          <svg viewBox="0 0 520 300" role="img" aria-labelledby="sm-t"><title id="sm-t">Máquina de estados da partida: aguardando, em andamento, encerrando e encerrada; pontuação rejeitada com 409 durante o encerramento.</title>
+            <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>
+            <g font-family="ui-monospace,monospace" font-size="13" fill="var(--fg)">
+              <rect x="20" y="40" width="130" height="44" rx="10" fill="var(--bg2)" stroke="var(--line)"/><text x="85" y="67" text-anchor="middle">aguardando</text>
+              <rect x="195" y="40" width="130" height="44" rx="10" fill="var(--bg2)" stroke="var(--green)"/><text x="260" y="67" text-anchor="middle">em andamento</text>
+              <rect x="370" y="40" width="130" height="44" rx="10" fill="var(--bg2)" stroke="var(--amber)"/><text x="435" y="67" text-anchor="middle">encerrando</text>
+              <rect x="370" y="200" width="130" height="44" rx="10" fill="var(--bg2)" stroke="var(--line)"/><text x="435" y="227" text-anchor="middle">encerrada</text>
+              <line x1="150" y1="62" x2="193" y2="62" stroke="var(--muted)" marker-end="url(#ar)"/>
+              <line x1="325" y1="62" x2="368" y2="62" stroke="var(--muted)" marker-end="url(#ar)"/>
+              <line x1="435" y1="84" x2="435" y2="198" stroke="var(--muted)" marker-end="url(#ar)"/>
+              <path d="M240 84 C 220 130, 300 130, 280 86" fill="none" stroke="var(--green)" marker-end="url(#ar)"/>
+              <text x="260" y="140" text-anchor="middle" font-size="12" fill="var(--green)">POST /pontos → 200</text>
+              <rect x="40" y="180" width="270" height="78" rx="10" fill="none" stroke="var(--red)" stroke-dasharray="4 4"/>
+              <text x="56" y="205" font-size="12" fill="var(--red2)">POST /pontos durante "encerrando"</text>
+              <text x="56" y="225" font-size="12" fill="var(--muted)">→ 409, placar não muda</text>
+              <text x="56" y="245" font-size="12" fill="var(--muted)">→ painel ressincroniza o estado</text>
+              <line x1="310" y1="210" x2="420" y2="88" stroke="var(--red)" stroke-dasharray="4 4"/>
+            </g>
+          </svg>
+        </div>
+        <p class="cap">Ilustração simplificada da regra; códigos e rotas são ilustrativos.</p>
+      </div>
+    </article>
+
+    <!-- DACC -->
+    <article class="case flip" id="dacc">
+      <div class="reveal">
+        <div class="tag"><span class="pill red">Liderança técnica</span><span class="pill">5 devs</span><span class="pill">2025–2026</span></div>
+        <h3>DACC Platform: coordenar e entregar em equipe</h3>
+        <p class="one">Site e API do Diretório Acadêmico de Ciência da Computação da FEI, onde fui assessor de comunicação e depois secretário.</p>
+        <dl class="prs">
+          <dt>Papel</dt><dd>Coordenei 5 desenvolvedores: escopo, arquitetura, backlog e sprints (Scrum/Jira). Também escrevi código no frontend e backend, camada de dados, checkout Mercado Pago e testes de integração.</dd>
+          <dt>Decisão</dt><dd>API em ASP.NET Core separada do Next.js, com PostgreSQL e testes de integração contra banco real (Testcontainers) nos fluxos de produtos, pedidos e filtros, onde um bug custa dinheiro do aluno.</dd>
+          <dt>Limites</dt><dd>Não afirmo volume de usuários, pagamentos reais ou receita.</dd>
+        </dl>
+        <div class="ev">
+          <a href="https://github.com/kaioposnky/DACC-Platform" target="_blank" rel="noopener">repositório + créditos</a>
+          <a href="https://github.com/kaioposnky/DACC-Platform/commit/5016a44" target="_blank" rel="noopener">checkout 5016a44</a>
+          <a href="https://github.com/kaioposnky/DACC-Platform/commit/8f1047c" target="_blank" rel="noopener">testes 8f1047c</a>
+        </div>
+        <div class="stack">C# · .NET 8 · PostgreSQL · Dapper · Next.js · TypeScript · xUnit · Testcontainers</div>
+      </div>
+      <div class="vis reveal">
+        <div class="panel">
+          <div class="ph"><span>arquitetura</span><span>diagrama original</span></div>
+          <svg viewBox="0 0 520 250" role="img" aria-labelledby="dacc-t"><title id="dacc-t">Next.js chama a API ASP.NET Core, que usa PostgreSQL e Mercado Pago; testes xUnit sobem PostgreSQL em container.</title>
+            <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>
+            <g font-family="ui-monospace,monospace" font-size="13" fill="var(--fg)">
+              <rect x="20" y="30" width="140" height="56" rx="10" fill="var(--bg2)" stroke="var(--line)"/><text x="90" y="54" text-anchor="middle">Next.js</text><text x="90" y="72" text-anchor="middle" font-size="11" fill="var(--muted)">TypeScript</text>
+              <rect x="200" y="30" width="140" height="56" rx="10" fill="var(--bg2)" stroke="var(--red)"/><text x="270" y="54" text-anchor="middle">ASP.NET Core</text><text x="270" y="72" text-anchor="middle" font-size="11" fill="var(--muted)">REST · JWT</text>
+              <rect x="380" y="10" width="120" height="44" rx="10" fill="var(--bg2)" stroke="var(--line)"/><text x="440" y="37" text-anchor="middle">PostgreSQL</text>
+              <rect x="380" y="70" width="120" height="44" rx="10" fill="var(--bg2)" stroke="var(--line)"/><text x="440" y="97" text-anchor="middle">Mercado Pago</text>
+              <line x1="160" y1="58" x2="198" y2="58" stroke="var(--muted)" marker-end="url(#ar2)"/>
+              <line x1="340" y1="50" x2="378" y2="35" stroke="var(--muted)" marker-end="url(#ar2)"/>
+              <line x1="340" y1="66" x2="378" y2="90" stroke="var(--muted)" marker-end="url(#ar2)"/>
+              <rect x="150" y="160" width="240" height="60" rx="10" fill="none" stroke="var(--green)" stroke-dasharray="4 4"/>
+              <text x="270" y="185" text-anchor="middle" fill="var(--green)">xUnit + Testcontainers</text>
+              <text x="270" y="205" text-anchor="middle" font-size="11" fill="var(--muted)">produtos · pedidos · filtros</text>
+              <line x1="270" y1="158" x2="270" y2="88" stroke="var(--green)" stroke-dasharray="4 4" marker-end="url(#ar2)"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </article>
+
+    <!-- Colmeia -->
+    <article class="case" id="colmeia">
+      <div class="reveal">
+        <div class="tag"><span class="pill ok">PR mesclada</span><span class="pill">open source</span><span class="pill">jul/2026</span></div>
+        <h3>Colmeia: workspaces organizáveis num orquestrador de agentes</h3>
+        <p class="one">Contribuição ao <a href="https://github.com/londarks/colmeia" target="_blank" rel="noopener">londarks/colmeia</a>, um canvas para orquestrar agentes.</p>
+        <dl class="prs">
+          <dt>Entrega</dt><dd>Pastas, cores, drag-and-drop, multisseleção e deleção em cascata com confirmação na sidebar de workspaces.</dd>
+          <dt>Decisão</dt><dd>Rebase da implementação para identificar itens por ID e não por posição, para arrastar e multisselecionar não apagarem o workspace errado. Deleção em cascata sempre passa por um modal que diz quanto será apagado.</dd>
+          <dt>Resultado</dt><dd>PR #2: 3 arquivos, +998/−204, mesclada no upstream em 30/07/2026. Implementei com IA como apoio e validei o comportamento antes de abrir.</dd>
+        </dl>
+        <div class="ev">
+          <a href="https://github.com/londarks/colmeia/pull/2" target="_blank" rel="noopener">PR #2 (merged)</a>
+          <a href="https://github.com/kaioposnky/colmeia" target="_blank" rel="noopener">fork</a>
+        </div>
+      </div>
+      <div class="vis reveal">
+        <div class="panel">
+          <div class="ph"><span>sidebar de workspaces</span><span>mock</span></div>
+          <div class="mock" aria-hidden="true">
+            <div class="sb">
+              <div>📁 Faculdade</div>
+              <div class="sel"><span class="dot" style="background:#ea1d2c"></span>agente-docs</div>
+              <div class="sel"><span class="dot" style="background:#f2b84b"></span>agente-testes</div>
+              <div><span class="dot" style="background:#5fd38d"></span>pesquisa</div>
+              <div>📁 Pessoal</div>
+              <div style="padding-left:20px"><span class="dot" style="background:#7aa7ff"></span>automações</div>
+            </div>
+            <div class="canvas">
+              <div class="modal"><b>Apagar 2 workspaces?</b><span style="color:var(--muted)">Isso remove também 7 nós e 3 conexões.</span>
+                <div class="row"><span>Cancelar</span><span class="d">Apagar</span></div></div>
+            </div>
+          </div>
+        </div>
+        <p class="cap">Recriação simplificada da UX de confirmação; não é captura do produto.</p>
+      </div>
+    </article>
+
+    <!-- Spotifei -->
+    <article class="case flip" id="spotifei">
+      <div class="reveal">
+        <div class="tag"><span class="pill">Engenharia de software</span><span class="pill">em dupla</span><span class="pill">Java</span></div>
+        <h3>Spotifei: áudio concorrente sem travar a interface</h3>
+        <p class="one">Player desktop acadêmico. Fiquei com arquitetura, infraestrutura e áudio; o Gabriel, sobretudo com as telas.</p>
+        <dl class="prs">
+          <dt>Problema</dt><dd>Decodificar e tocar áudio no mesmo processo de uma UI Swing sem congelar cliques.</dd>
+          <dt>Decisão</dt><dd>MVC em camadas com injeção manual de dependências; fila de comandos e listeners para o player; <code>SwingWorker</code> para trabalho pesado; cache LRU; conversão para Opus com JavaCV/FFmpeg.</dd>
+        </dl>
+        <div class="ev"><a href="https://github.com/kaioposnky/Spotifei" target="_blank" rel="noopener">repositório</a></div>
+        <div class="stack">Java · Swing · PostgreSQL · JavaCV/FFmpeg · concorrência</div>
+      </div>
+      <div class="vis reveal">
+        <div class="panel">
+          <div class="ph"><span>threads</span><span>diagrama original</span></div>
+          <svg viewBox="0 0 520 200" role="img" aria-labelledby="sp-t"><title id="sp-t">A thread da UI envia comandos para uma fila; uma thread de áudio consome a fila e devolve eventos à UI por listeners.</title>
+            <defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>
+            <g font-family="ui-monospace,monospace" font-size="13" fill="var(--fg)">
+              <rect x="20" y="70" width="120" height="56" rx="10" fill="var(--bg2)" stroke="var(--blue)"/><text x="80" y="95" text-anchor="middle">UI (EDT)</text><text x="80" y="113" text-anchor="middle" font-size="11" fill="var(--muted)">Swing</text>
+              <rect x="200" y="70" width="120" height="56" rx="10" fill="var(--bg2)" stroke="var(--line)"/><text x="260" y="95" text-anchor="middle">fila de</text><text x="260" y="113" text-anchor="middle">comandos</text>
+              <rect x="380" y="70" width="120" height="56" rx="10" fill="var(--bg2)" stroke="var(--red)"/><text x="440" y="95" text-anchor="middle">áudio</text><text x="440" y="113" text-anchor="middle" font-size="11" fill="var(--muted)">Opus · LRU</text>
+              <line x1="140" y1="90" x2="198" y2="90" stroke="var(--muted)" marker-end="url(#ar3)"/>
+              <line x1="320" y1="90" x2="378" y2="90" stroke="var(--muted)" marker-end="url(#ar3)"/>
+              <path d="M440 128 C 440 180, 80 180, 80 130" fill="none" stroke="var(--green)" marker-end="url(#ar3)"/>
+              <text x="260" y="186" text-anchor="middle" font-size="12" fill="var(--green)">listeners → progresso, faixa atual</text>
+              <text x="170" y="60" text-anchor="middle" font-size="11" fill="var(--muted)">play/pause/seek</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="trajetoria">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="n">03</span><h2>Trajetória</h2></div>
+    <div class="tl">
+      <article class="reveal">
+        <div class="when">2026 → hoje</div>
+        <div><h3>TopOne</h3><div class="role">Estágio em análise de dados · crédito</div>
+          <ul>
+            <li>Analiso bases e planilhas do motor de decisão de crédito para entender regras e cálculos e encontrar inconsistências.</li>
+            <li>Uso SQL para investigar cálculos e Python (pandas, NumPy, openpyxl, Matplotlib) para scripts e gráficos.</li>
+            <li>Apresento análises à liderança e documento o funcionamento do motor para outras áreas.</li>
+            <li>Uso LLMs pelo Oh My Pi para acelerar automações, documentação e correção de erros, sem expor dados de clientes.</li>
+          </ul></div>
+      </article>
+      <article class="reveal">
+        <div class="when">nov/2026 → hoje</div>
+        <div><h3>i9UFPR</h3><div class="role">Desenvolvimento de software em projetos do grupo</div>
+          <ul><li>BotOffice (painel de agentes Hermes) e sistema do campeonato de robótica do Pitch Day Experience. <a href="#i9">Ver case</a>.</li></ul></div>
+      </article>
+      <article class="reveal">
+        <div class="when">ago/2024 → fev/2026</div>
+        <div><h3>DACC · FEI</h3><div class="role">Assessor de comunicação → secretário (voluntário)</div>
+          <ul><li>Coordenei 5 devs na DACC Platform; representei estudantes junto à coordenação. <a href="#dacc">Ver case</a>.</li></ul></div>
+      </article>
+      <article class="reveal">
+        <div class="when">fev/2026 → jul/2028*</div>
+        <div><h3>UFPR · Bacharelado em Ciência da Computação</h3><div class="role">IRA 0,88 / 1,00</div>
+          <ul><li>Em curso: Inteligência Artificial, Design de Software, Redes de Computadores I, Matemática Discreta. Transferido da FEI (2024–2026) com aproveitamento de créditos.</li><li>* previsão pessoal de formatura.</li></ul></div>
+      </article>
+      <article class="reveal">
+        <div class="when">2025</div>
+        <div><h3>Certificações</h3><div class="role">Python e inglês</div>
+          <ul>
+            <li><a href="https://certificates.cs50.io/e88f1fd1-3fb5-4be3-869e-c806b1066534.pdf?size=letter" target="_blank" rel="noopener">CS50P · Harvard/CS50</a> — programação com Python.</li>
+            <li><a href="https://cert.efset.org/en/XEvwEE" target="_blank" rel="noopener">EF SET</a> — inglês C1 (65/100).</li>
+          </ul></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="metodo">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="n">04</span><h2>Como eu trabalho com IA</h2>
+      <p>Uso agentes (Claude Code, OMP/Pi, Cursor, Antigravity) todo dia. O que separa isso de “pedir para a IA fazer” é o processo em volta:</p></div>
+    <div class="method reveal">
+      <div><h3>Contrato antes do código</h3><p>Defino o que a ferramenta pode e não pode fazer, como no allowlist do Moodly e nos esquemas de tool calling.</p></div>
+      <div><h3>Contexto estruturado</h3><p>Criei a skill <code>architecture-doc-tree</code>: documentação em 4 níveis com links recíprocos para pessoas e agentes acharem a visão certa.</p></div>
+      <div><h3>Humano no ponto de risco</h3><p>Aprovação obrigatória para ações destrutivas; ambiguidade vira erro, não palpite.</p></div>
+      <div><h3>Verificar, não confiar</h3><p>Testes, comparação com a fonte e medição. No Harness Comparator, desenhei rubricas e controles para comparar agentes em tarefas de código e documentei o que não era comparável.</p></div>
+    </div>
+    <div class="honest reveal"><b>Sobre autoria.</b> Boa parte do código recente foi escrita com agentes sob minha direção. Em cada case, eu digo o que é meu: definição do problema, decisões, revisão e validação. Em forks, conto só o delta. Em equipe, digo quem fez o quê.</div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="n">05</span><h2>Stack, ligada a onde usei</h2></div>
+    <div class="skills">
+      <div class="reveal"><h3>IA aplicada a software</h3><p>LLMs, tool calling, JSON Schema, MCP, orquestração e roteamento de modelos, prompts, skills, RAG, n8n.</p><small>OMP · Moodly · BotOffice · Harness Comparator</small></div>
+      <div class="reveal"><h3>Backend e APIs</h3><p>Python, TypeScript, C#/.NET, Java/Spring, PHP/Laravel, REST, PostgreSQL, SQLite, Firebase.</p><small>DACC · i9UFPR · Biblioteka</small></div>
+      <div class="reveal"><h3>Dados</h3><p>SQL, Excel, pandas, NumPy, openpyxl, Matplotlib.</p><small>TopOne</small></div>
+      <div class="reveal"><h3>Interfaces</h3><p>React, Next.js, React Native/Expo, Java Swing.</p><small>Campeonato · DACC · KarRunner · Spotifei</small></div>
+      <div class="reveal"><h3>Engenharia</h3><p>Git, PRs, CI/releases, testes de integração, arquitetura modular, concorrência, Scrum.</p><small>OMP · DACC · Colmeia</small></div>
+      <div class="reveal"><h3>Sistemas</h3><p>C, C++, Rust, redes, protocolos próprios.</p><small>KCFTP · Knode · k-wings</small></div>
+    </div>
+  </div>
+</section>
+
+<section id="mais">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="n">06</span><h2>Mais projetos</h2><p>Coleção de projetos públicos, acadêmicos e experimentos.</p></div>
+    <div class="more">
+      <a class="reveal" href="https://github.com/kaioposnky/karrunner" target="_blank" rel="noopener"><b>KarRunner</b><span>Corrida infinita mobile controlada pela inclinação do celular (acelerômetro), com progressão e ranking em Firebase.</span><i>React Native · Expo · Firebase</i></a>
+      <a class="reveal" href="https://github.com/kaioposnky/Knode" target="_blank" rel="noopener"><b>Knode</b><span>Cliente de telemetria Linux (CPU, processos) via WebSocket.</span><i>Rust</i></a>
+      <a class="reveal" href="https://github.com/kaioposnky/Biblioteka-API" target="_blank" rel="noopener"><b>Biblioteka</b><span>API de biblioteca: acervo, empréstimos, reservas, multas e JWT, com cliente web separado.</span><i>Java · Spring Boot</i></a>
+      <a class="reveal" href="https://github.com/kaioposnky/trabalho1-arq-comp" target="_blank" rel="noopener"><b>Assembly: soma de vetores</b><span>Trabalho de Arquitetura de Computadores no simulador egg, com resultado gravado em memória.</span><i>Assembly · acadêmico</i></a>
+      <a class="reveal" href="https://github.com/kaioposnky/KriptoX-C" target="_blank" rel="noopener"><b>KriptoX-C</b><span>Simulador acadêmico de exchange com operações fictícias e persistência em arquivo binário.</span><i>C</i></a>
+      <a class="reveal" href="https://github.com/kaioposnky/SPAP" target="_blank" rel="noopener"><b>SPAP</b><span>Sorteador de pares para amigo-secreto.</span><i>Next.js · PostgreSQL/Neon</i></a>
+      <a class="reveal" href="https://github.com/kaioposnky/truko" target="_blank" rel="noopener"><b>TruKo</b><span>Protótipo de truco com servidor Node/Express e tempo real.</span><i>Node · Express</i></a>
+      <a class="reveal" href="https://github.com/kaioposnky/opencode" target="_blank" rel="noopener"><b>OpenCode (fork)</b><span>Fork do agente OpenCode usado em experimentos de integração.</span><i>TypeScript</i></a>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contato">
+  <div class="wrap reveal">
+    <div class="eyebrow">Contato</div>
+    <h2>Quero construir os próximos agentes do iFood.</h2>
+    <p>Remoto, 30 horas por semana, com a faculdade de acordo. Respondo por e-mail ou LinkedIn.</p>
+    <div class="ctas">
+      <a class="btn primary" href="mailto:kposansky@gmail.com">kposansky@gmail.com</a>
+      <a class="btn" href="https://www.linkedin.com/in/kaioposansky/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn" href="https://github.com/kaioposnky" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 Kaio Angelo Posansky Santos · Curitiba</span><span>HTML e CSS feitos à mão com agentes, sem framework.</span></div></footer>
+
+<script>
+document.body.classList.remove('no-js');
+// theme
+document.getElementById('theme').addEventListener('click',function(){
+  var r=document.documentElement,n=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=n;try{localStorage.setItem('kp-theme',n)}catch(e){}
+});
+// reveal
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+if('IntersectionObserver' in window&&!reduce){
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+}else document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in')});
+// tabs
+document.querySelectorAll('[role=tablist]').forEach(function(tl){
+  var tabs=[].slice.call(tl.querySelectorAll('[role=tab]'));
+  function sel(t){tabs.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;document.getElementById(x.getAttribute('aria-controls')).hidden=!on});t.focus()}
+  tabs.forEach(function(t,i){t.addEventListener('click',function(){sel(t)});t.addEventListener('keydown',function(e){if(e.key==='ArrowRight')sel(tabs[(i+1)%tabs.length]);if(e.key==='ArrowLeft')sel(tabs[(i-1+tabs.length)%tabs.length])})});
+});
+// terminal typer
+var lines=[
+ ['c-dim','$ omp "lista os arquivos"'],
+ ['','→ tools: [echo, edit, grep, glob]'],
+ ['c-dim','← provider stream: tool_call name="ech"'],
+ ['c-dim',''],
+ ['c-red','antes:  ✗ Tool "ech" not found — loop abortado'],
+ ['c-dim',''],
+ ['c-amb','depois: resolveToolNameByUniquePrefix("ech")'],
+ ['c-grn','        ✓ único candidato +1 char → "echo"'],
+ ['c-grn','        ✓ chamada reescrita com nome canônico'],
+ ['','        echo "src/ tests/ README.md"'],
+ ['c-dim',''],
+ ['c-amb','ambíguo: "e" → echo | edit'],
+ ['c-red','        ✗ erro explícito, sem adivinhar']
+];
+var pre=document.getElementById('typer');
+function render(n,partial){var h='';for(var i=0;i<n;i++)h+='<span class="'+lines[i][0]+'">'+esc(lines[i][1])+'</span>\n';if(partial!=null)h+='<span class="'+lines[n][0]+'">'+esc(partial)+'</span>';pre.innerHTML=h+'<span class="caret"></span>'}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+if(reduce){render(lines.length)}else{
+  var li=0,ci=0;(function step(){if(li>=lines.length){render(lines.length);return}var s=lines[li][1];if(ci<=s.length){render(li,s.slice(0,ci));ci+=2;setTimeout(step,14)}else{li++;ci=0;setTimeout(step,li===4||li===6||li===11?420:90)}})();
+}
+</script>
+</body>
+</html>
