@@ -153,6 +153,16 @@ h2{font-size:clamp(28px,4vw,42px);letter-spacing:-.035em;margin:6px 0 0;line-hei
 .tool span{font-size:12.5px;color:var(--muted);margin-top:-6px}
 .omp-logo{width:34px;height:34px;border-radius:9px;background:#0a0810;display:grid;place-items:center;font:900 18px var(--sans)}
 
+/* follows */
+.fol{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:820px){.fol{grid-template-columns:repeat(2,1fr)}}
+.fo{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:20px 14px;border-radius:18px;background:var(--card);border:1px solid var(--line);text-decoration:none;transition:border-color .15s,transform .15s}
+.fo:hover{border-color:var(--a1);transform:translateY(-2px)}
+.fo img{width:72px;height:72px;border-radius:50%;object-fit:cover;outline:2px solid var(--line);outline-offset:3px;margin-bottom:6px}
+.fo b{font-size:15.5px}
+.fo span{font-size:13px;color:var(--muted)}
+.fo small{font:12px var(--mono);color:var(--dim)}
+
 /* stack */
 .stack{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px}
 .st{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:13.5px}
@@ -456,6 +466,17 @@ footer{padding:20px 0 40px;color:var(--dim);font-size:13px;text-align:center}
       <div class="tool rv"><img src="assets/i/n8n.svg" alt="" style="padding:5px;background:var(--card2)"><b>n8n</b><span>automações</span></div>
       <div class="tool rv"><img src="assets/i/ollama.svg" alt="" style="padding:5px;background:var(--card2)"><b>Ollama</b><span>modelos locais</span></div>
       <div class="tool rv"><div class="omp-logo mono" style="font-size:13px;color:var(--a3)">MCP</div><b>MCP · Skills</b><span>tools para agentes</span></div>
+    </div>
+  </section>
+
+  <!-- FOLLOWS -->
+  <section id="aprendo">
+    <div class="sh rv"><div class="k">Referências</div><h2>Com quem eu aprendo</h2></div>
+    <div class="fol">
+      <a class="fo rv" href="https://www.youtube.com/@GutoGalego" target="_blank" rel="noopener"><img src="assets/i/yt-GutoGalego.jpg" alt=""><b>Augusto Galego</b><span>System design e carreira</span><small>YouTube ↗</small></a>
+      <a class="fo rv" href="https://www.youtube.com/@Akitando" target="_blank" rel="noopener"><img src="assets/i/yt-Akitando.jpg" alt=""><b>Fabio Akita</b><span>Fundamentos de computação</span><small>YouTube ↗</small></a>
+      <a class="fo rv" href="https://www.youtube.com/@LucasMontano" target="_blank" rel="noopener"><img src="assets/i/yt-LucasMontano.jpg" alt=""><b>Lucas Montano</b><span>Mercado e engenharia</span><small>YouTube ↗</small></a>
+      <a class="fo rv" href="https://www.youtube.com/@Fireship" target="_blank" rel="noopener"><img src="assets/i/yt-Fireship.jpg" alt=""><b>Fireship</b><span>Novas tecnologias e IA</span><small>YouTube ↗</small></a>
     </div>
   </section>
 
