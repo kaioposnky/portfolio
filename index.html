@@ -7,9 +7,8 @@
 <meta name="description" content="Kaio Posansky — Ciência da Computação na UFPR, estágio em dados na TopOne, i9UFPR. Ferramentas para agentes de IA, tool calling, automação e full stack.">
 <meta property="og:title" content="Kaio Posansky · AI Engineer">
 <meta property="og:description" content="Fork do Oh My Pi, Moodly, i9UFPR, DACC Platform, Colmeia.">
-<meta property="og:image" content="https://kaioposnky.github.io/portfolio/assets/kaio.jpg">
 <meta name="theme-color" content="#0c0a10">
-<link rel="icon" href="assets/kaio.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f35bd0'/%3E%3Cstop offset='1' stop-color='%236fb1ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='21.5' font-family='system-ui,sans-serif' font-size='14' font-weight='800' fill='white' text-anchor='middle'%3EKP%3C/text%3E%3C/svg%3E">
 <style>
 :root{
   --bg:#0c0a10;--bg2:#14111a;--card:#17141e;--card2:#1e1a27;--line:#2a2535;--fg:#f1eef6;--muted:#aaa3b8;--dim:#8a8398;
@@ -35,20 +34,17 @@ img{display:block;max-width:100%}
 /* nav */
 .nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:4px;padding:6px;border:1px solid var(--line);border-radius:999px;background:rgba(20,17,26,.78);backdrop-filter:blur(14px);box-shadow:0 10px 40px -10px rgba(0,0,0,.6);max-width:calc(100% - 20px)}
 .nav .me{display:flex;align-items:center;gap:8px;padding:0 10px 0 4px;text-decoration:none;font-weight:700;white-space:nowrap}
-.nav .me img{width:28px;height:28px;border-radius:50%;object-fit:cover}
+.nav .me .mg{width:28px;height:28px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font:800 11px var(--sans);color:#fff}
 .nav a.l{padding:7px 12px;border-radius:999px;text-decoration:none;color:var(--muted);font-size:14px}
 .nav a.l:hover{color:var(--fg);background:var(--card2)}
 .nav a.cta{padding:7px 14px;border-radius:999px;background:var(--fg);color:var(--bg);font-weight:650;font-size:14px;text-decoration:none;white-space:nowrap}
 @media (max-width:760px){.nav a.l{display:none}}
 
 /* hero */
-.hero{padding:140px 0 60px;display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:center}
-@media (max-width:760px){.hero{grid-template-columns:1fr;padding-top:110px;gap:24px}}
-.ph{position:relative;width:200px;height:200px}
-.ph::before{content:"";position:absolute;inset:-4px;border-radius:32px;background:var(--grad);filter:blur(0)}
-.ph img{position:relative;width:200px;height:200px;border-radius:28px;object-fit:cover;border:4px solid var(--bg)}
-.ph .st{position:absolute;right:-10px;bottom:-10px;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:5px 11px;font:600 12px var(--sans);display:flex;gap:6px;align-items:center}
-.ph .st::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok)}
+.hero{padding:150px 0 60px;max-width:780px}
+@media (max-width:760px){.hero{padding-top:110px}}
+.status{display:inline-flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font:600 12.5px var(--sans);margin-bottom:18px}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok)}
 .kicker{font:600 13px var(--mono);color:var(--muted);letter-spacing:.06em}
 h1{font-size:clamp(40px,6.5vw,72px);line-height:1;letter-spacing:-.04em;margin:10px 0 14px}
 .tagline{font-size:20px;color:var(--muted);margin:0;max-width:40ch}
@@ -202,7 +198,7 @@ footer{padding:20px 0 40px;color:var(--dim);font-size:13px;text-align:center}
 </svg>
 
 <nav class="nav" aria-label="Principal">
-  <a class="me" href="#top"><img src="assets/kaio.jpg" alt="">Kaio</a>
+  <a class="me" href="#top"><span class="mg" aria-hidden="true">KP</span>Kaio</a>
   <a class="l" href="#exp">Experiência</a>
   <a class="l" href="#projetos">Projetos</a>
   <a class="l" href="#ia">IA</a>
@@ -213,8 +209,8 @@ footer{padding:20px 0 40px;color:var(--dim);font-size:13px;text-align:center}
 <main id="top">
 <div class="wrap">
   <header class="hero">
-    <div class="ph rv"><img src="assets/kaio.jpg" alt="Foto de Kaio Posansky" width="200" height="200"><span class="st">Aberto a estágio</span></div>
     <div class="rv">
+      <span class="status">Aberto a estágio</span>
       <div class="kicker">AI ENGINEER · CIÊNCIA DA COMPUTAÇÃO UFPR</div>
       <h1>Kaio <span class="grad">Posansky</span></h1>
       <p class="tagline">Construo <b>ferramentas para agentes de IA</b>: tool calling, CLIs, automações e sistemas full stack.</p>
